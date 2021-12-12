@@ -37,7 +37,7 @@ void WatchyRTC::clearAlarm(){
         nextAlarmMinute = rtc_pcf.getMinute();
         nextAlarmMinute = (nextAlarmMinute == 59) ? 0 : (nextAlarmMinute + 1); //set alarm to trigger 1 minute from now
         rtc_pcf.setAlarm(nextAlarmMinute, 99, 99, 99);
-    }    
+    }
 }
 
 void WatchyRTC::read(tmElements_t &tm){
@@ -57,7 +57,7 @@ void WatchyRTC::read(tmElements_t &tm){
         tm.Hour = rtc_pcf.getHour();
         tm.Minute = rtc_pcf.getMinute();
         tm.Second = rtc_pcf.getSecond();
-    }    
+    }
 }
 
 void WatchyRTC::set(tmElements_t tm){
@@ -68,7 +68,7 @@ void WatchyRTC::set(tmElements_t tm){
     }else{
         rtc_pcf.setDate(tm.Day, _getDayOfWeek(tm.Day, tm.Month, tm.Year+YEAR_OFFSET_PCF), tm.Month, 0, tm.Year);
         rtc_pcf.setTime(tm.Hour, tm.Minute, tm.Second);
-        clearAlarm();      
+        clearAlarm();
     }
 }
 
@@ -83,7 +83,7 @@ uint8_t WatchyRTC::temperature(){
 void WatchyRTC::_DSConfig(String datetime){
     if(datetime != ""){
         tmElements_t tm;
-        tm.Year = _getValue(datetime, ':', 0).toInt() - YEAR_OFFSET_DS;//offset from 1970, since year is stored in uint8_t        
+        tm.Year = _getValue(datetime, ':', 0).toInt() - YEAR_OFFSET_DS;//offset from 1970, since year is stored in uint8_t
         tm.Month = _getValue(datetime, ':', 1).toInt();
         tm.Day = _getValue(datetime, ':', 2).toInt();
         tm.Hour = _getValue(datetime, ':', 3).toInt();
@@ -95,7 +95,7 @@ void WatchyRTC::_DSConfig(String datetime){
     //https://github.com/JChristensen/DS3232RTC
     rtc_ds.squareWave(SQWAVE_NONE); //disable square wave output
     rtc_ds.setAlarm(ALM2_EVERY_MINUTE, 0, 0, 0, 0); //alarm wakes up Watchy every minute
-    rtc_ds.alarmInterrupt(ALARM_2, true); //enable alarm interrupt  
+    rtc_ds.alarmInterrupt(ALARM_2, true); //enable alarm interrupt
 }
 
 void WatchyRTC::_PCFConfig(String datetime){
@@ -110,7 +110,7 @@ void WatchyRTC::_PCFConfig(String datetime){
         //day, weekday, month, century(1=1900, 0=2000), year(0-99)
         rtc_pcf.setDate(Day, _getDayOfWeek(Day, Month, Year), Month, 0, Year - YEAR_OFFSET_PCF);//offset from 2000
         //hr, min, sec
-        rtc_pcf.setTime(Hour, Minute, Second);     
+        rtc_pcf.setTime(Hour, Minute, Second);
     }
     clearAlarm();
 }

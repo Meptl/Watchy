@@ -24,7 +24,7 @@ class BLE
     bool begin(const char* localName);
     int updateStatus();
     int howManyBytes();
-  
+
   private:
     String local_name;
 
