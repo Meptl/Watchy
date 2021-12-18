@@ -32,12 +32,19 @@ void WatchyRTC::clearAlarm(){
     if(rtcType == DS3231){
         rtc_ds.alarm(ALARM_2);
     }else{
-        int nextAlarmMinute = 0;
-        rtc_pcf.clearAlarm(); //resets the alarm flag in the RTC
-        nextAlarmMinute = rtc_pcf.getMinute();
-        nextAlarmMinute = (nextAlarmMinute == 59) ? 0 : (nextAlarmMinute + 1); //set alarm to trigger 1 minute from now
-        rtc_pcf.setAlarm(nextAlarmMinute, 99, 99, 99);
+        setAlarm(5);
     }
+}
+
+void WatchyRTC::setAlarm(int minutes){
+    rtc_pcf.clearAlarm(); //resets the alarm flag in the RTC
+    int nextAlarmMinute = rtc_pcf.getMinute();
+    nextAlarmMinute = (nextAlarmMinute + minutes) % 60;
+    rtc_pcf.setAlarm(nextAlarmMinute, 99, 99, 99);
+}
+
+int WatchyRTC::getMinute() {
+    return rtc_pcf.getMinute();
 }
 
 void WatchyRTC::read(tmElements_t &tm){

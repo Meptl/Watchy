@@ -13,14 +13,11 @@
 #include "BLE.h"
 #include "bma.h"
 #include "config.h"
-
-typedef struct weatherData{
-    int8_t temperature;
-    int16_t weatherConditionCode;
-}weatherData;
+#include "icons.h"
 
 class Watchy {
     public:
+        const int HOURGLASS_SEGMENTS = 8;
         static WatchyRTC RTC;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
         tmElements_t currentTime;
@@ -35,22 +32,18 @@ class Watchy {
         void handleButtonPress();
         void showMenu(byte menuIndex, bool partialRefresh);
         void showFastMenu(byte menuIndex);
-        void showBattery();
-        void showBuzz();
-        void showAccelerometer();
-        void showUpdateFW();
-        void setTime();
-        void setupWifi();
-        bool connectWiFi();
-        weatherData getWeatherData();
-        void updateFWBegin();
 
         void showWatchFace(bool partialRefresh);
+        void showHourglass(bool partialRefresh);
+        void drawTime();
+        void drawBattery(uint8_t x, uint8_t y);
+        void drawHourglass(int minutesRemainning, int i);
+        void setTime();
         virtual void drawWatchFace(); //override this method for different watch faces
 
     private:
         void _bmaConfig();
-        static void _configModeCallback(WiFiManager *myWiFiManager);
+        void setNextAlarm(int currentMinute, int minutesRemaining);
         static uint16_t _readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
         static uint16_t _writeRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
 };
@@ -58,7 +51,5 @@ class Watchy {
 extern RTC_DATA_ATTR int guiState;
 extern RTC_DATA_ATTR int menuIndex;
 extern RTC_DATA_ATTR BMA423 sensor;
-extern RTC_DATA_ATTR bool WIFI_CONFIGURED;
-extern RTC_DATA_ATTR bool BLE_CONFIGURED;
 
 #endif

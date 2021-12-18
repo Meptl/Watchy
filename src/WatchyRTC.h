@@ -21,6 +21,8 @@ class WatchyRTC {
         void init();
         void config(String datetime);
         void clearAlarm();
+        void setAlarm(int minutes);
+        int getMinute();
         void read(tmElements_t &tm);
         void set(tmElements_t tm);
         uint8_t temperature();
