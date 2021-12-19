@@ -2,16 +2,12 @@
 #define WATCHY_H
 
 #include <Arduino.h>
-#include <WiFiManager.h>
-#include <HTTPClient.h>
 #include <Arduino_JSON.h>
 #include <GxEPD2_BW.h>
 #include <Wire.h>
 #include <Fonts/FreeMonoBold9pt7b.h>
 #include "DSEG7_Classic_Bold_53.h"
 #include "WatchyRTC.h"
-#include "BLE.h"
-#include "bma.h"
 #include "config.h"
 #include "icons.h"
 
@@ -42,10 +38,7 @@ class Watchy {
         virtual void drawWatchFace(); //override this method for different watch faces
 
     private:
-        void _bmaConfig();
         void setNextAlarm(int currentMinute, int minutesRemaining);
-        static uint16_t _readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
-        static uint16_t _writeRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
 };
 
 extern RTC_DATA_ATTR int guiState;
