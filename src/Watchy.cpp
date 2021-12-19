@@ -7,7 +7,6 @@ RTC_DATA_ATTR int hourglassMinutes = 8;
 RTC_DATA_ATTR int targetMinute;
 RTC_DATA_ATTR int guiState;
 RTC_DATA_ATTR int menuIndex;
-RTC_DATA_ATTR BMA423 sensor;
 RTC_DATA_ATTR bool displayFullInit = true;
 RTC_DATA_ATTR bool alarmSet;
 
@@ -181,7 +180,7 @@ void Watchy::handleButtonPress() {
                     if(menuIndex < 0) {
                         menuIndex = MENU_LENGTH - 1;
                     }
-                    showFastMenu(menuIndex);
+                    showMenu(menuIndex, true);
                 }
             }else if(digitalRead(DOWN_BTN_PIN) == 1) {
                 lastTimeout = millis();
@@ -190,7 +189,7 @@ void Watchy::handleButtonPress() {
                     if(menuIndex > MENU_LENGTH - 1) {
                         menuIndex = 0;
                     }
-                    showFastMenu(menuIndex);
+                    showMenu(menuIndex, true);
                 }
             }
         }
@@ -222,35 +221,6 @@ void Watchy::showMenu(byte menuIndex, bool partialRefresh){
     }
 
     display.display(partialRefresh);
-
-    guiState = MAIN_MENU_STATE;
-}
-
-void Watchy::showFastMenu(byte menuIndex) {
-    display.setFullWindow();
-    display.fillScreen(GxEPD_BLACK);
-    display.setFont(&FreeMonoBold9pt7b);
-
-    int16_t  x1, y1;
-    uint16_t w, h;
-    int16_t yPos;
-
-    const char *menuItems[] = {"Set Time", "Set Hourglass"};
-    for(int i=0; i<MENU_LENGTH; i++) {
-        yPos = 30+(MENU_HEIGHT*i);
-        display.setCursor(0, yPos);
-        if(i == menuIndex) {
-            display.getTextBounds(menuItems[i], 0, yPos, &x1, &y1, &w, &h);
-            display.fillRect(x1-1, y1-10, 200, h+15, GxEPD_BLACK);
-            display.setTextColor(GxEPD_WHITE);
-            display.println(menuItems[i]);
-        }else{
-            display.setTextColor(GxEPD_BLACK);
-            display.println(menuItems[i]);
-        }
-    }
-
-    display.display(true);
 
     guiState = MAIN_MENU_STATE;
 }
@@ -552,17 +522,4 @@ float Watchy::getBatteryVoltage() {
     }else{
         return analogReadMilliVolts(V15_ADC_PIN) / 1000.0f * 2.0f;
     }
-}
-
-uint16_t Watchy::_readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
-{
-    Wire.beginTransmission(address);
-    Wire.write(reg);
-    Wire.endTransmission();
-    Wire.requestFrom((uint8_t)address, (uint8_t)len);
-    uint8_t i = 0;
-    while (Wire.available()) {
-        data[i++] = Wire.read();
-    }
-    return 0;
 }

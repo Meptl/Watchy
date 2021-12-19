@@ -24,18 +24,17 @@ class Watchy {
         static void displayBusyCallback(const void*);
         float getBatteryVoltage();
         void vibMotor(uint8_t intervalMs = 100, uint8_t length = 20);
-
         void handleButtonPress();
-        void showMenu(byte menuIndex, bool partialRefresh);
-        void showFastMenu(byte menuIndex);
 
+        void showMenu(byte menuIndex, bool partialRefresh);
         void showWatchFace(bool partialRefresh);
         void showHourglass(bool partialRefresh);
         void drawTime();
         void drawBattery(uint8_t x, uint8_t y);
         void drawHourglass(int minutesRemainning, int i);
-        void setTime();
         virtual void drawWatchFace(); //override this method for different watch faces
+
+        void setTime();
 
     private:
         void setNextAlarm(int currentMinute, int minutesRemaining);
@@ -43,6 +42,5 @@ class Watchy {
 
 extern RTC_DATA_ATTR int guiState;
 extern RTC_DATA_ATTR int menuIndex;
-extern RTC_DATA_ATTR BMA423 sensor;
 
 #endif
