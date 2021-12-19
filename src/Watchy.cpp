@@ -199,7 +199,7 @@ void Watchy::handleButtonPress() {
 
 void Watchy::showMenu(byte menuIndex, bool partialRefresh){
     display.setFullWindow();
-    display.fillScreen(GxEPD_BLACK);
+    display.fillScreen(GxEPD_WHITE);
     display.setFont(&FreeMonoBold9pt7b);
 
     int16_t  x1, y1;
@@ -212,11 +212,11 @@ void Watchy::showMenu(byte menuIndex, bool partialRefresh){
         display.setCursor(0, yPos);
         if(i == menuIndex) {
             display.getTextBounds(menuItems[i], 0, yPos, &x1, &y1, &w, &h);
-            display.fillRect(x1-1, y1-10, 200, h+15, GxEPD_WHITE);
-            display.setTextColor(GxEPD_BLACK);
+            display.fillRect(x1-1, y1-10, 200, h+15, GxEPD_BLACK);
+            display.setTextColor(GxEPD_WHITE);
             display.println(menuItems[i]);
         }else{
-            display.setTextColor(GxEPD_WHITE);
+            display.setTextColor(GxEPD_BLACK);
             display.println(menuItems[i]);
         }
     }
@@ -241,11 +241,11 @@ void Watchy::showFastMenu(byte menuIndex) {
         display.setCursor(0, yPos);
         if(i == menuIndex) {
             display.getTextBounds(menuItems[i], 0, yPos, &x1, &y1, &w, &h);
-            display.fillRect(x1-1, y1-10, 200, h+15, GxEPD_WHITE);
-            display.setTextColor(GxEPD_BLACK);
+            display.fillRect(x1-1, y1-10, 200, h+15, GxEPD_BLACK);
+            display.setTextColor(GxEPD_WHITE);
             display.println(menuItems[i]);
         }else{
-            display.setTextColor(GxEPD_WHITE);
+            display.setTextColor(GxEPD_BLACK);
             display.println(menuItems[i]);
         }
     }
