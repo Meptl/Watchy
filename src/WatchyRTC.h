@@ -20,8 +20,7 @@ class WatchyRTC {
         WatchyRTC();
         void init();
         void config(String datetime);
-        void clearAlarm();
-        void setAlarm(int minutes);
+        void clearAlarm(int minutes = 5);
         int getMinute();
         void read(tmElements_t &tm);
         void set(tmElements_t tm);

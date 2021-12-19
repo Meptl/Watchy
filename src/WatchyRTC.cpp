@@ -28,19 +28,15 @@ void WatchyRTC::config(String datetime){
     }
 }
 
-void WatchyRTC::clearAlarm(){
+void WatchyRTC::clearAlarm(int minutes){
     if(rtcType == DS3231){
         rtc_ds.alarm(ALARM_2);
     }else{
-        setAlarm(5);
+        rtc_pcf.clearAlarm(); //resets the alarm flag in the RTC
+        int nextAlarmMinute = rtc_pcf.getMinute();
+        nextAlarmMinute = (nextAlarmMinute + minutes) % 60;
+        rtc_pcf.setAlarm(nextAlarmMinute, 99, 99, 99);
     }
-}
-
-void WatchyRTC::setAlarm(int minutes){
-    rtc_pcf.clearAlarm(); //resets the alarm flag in the RTC
-    int nextAlarmMinute = rtc_pcf.getMinute();
-    nextAlarmMinute = (nextAlarmMinute + minutes) % 60;
-    rtc_pcf.setAlarm(nextAlarmMinute, 99, 99, 99);
 }
 
 int WatchyRTC::getMinute() {
