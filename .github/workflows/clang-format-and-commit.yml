@@ -1,0 +1,23 @@
+name: clang-format Check and Commit
+on: [push, pull_request]
+jobs:
+  auto-format:
+    name: Automatic clang-format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: arduino/arduino-lint-action@v1
+    # - name: Run clang-format style checker.
+    #   uses: DoozyX/clang-format-lint-action@v0.13
+    #   with:
+    #     source: 'src'
+    #     extensions: 'h,cpp,c'
+    #     clangFormatVersion: 13
+    #     inplace: True
+    # - uses: EndBug/add-and-commit@v4
+    #   with:
+    #     author_name: Clang Robot
+    #     author_email: robot@example.com
+    #     message: 'Committing clang-format changes'
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
