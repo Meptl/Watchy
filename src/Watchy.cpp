@@ -82,7 +82,7 @@ void Watchy::handleButtonPress() {
                         setTime();
                         break;
                     case 1:
-                        setTime();
+                        setHourglass();
                         break;
                 }
                 break;
@@ -159,7 +159,7 @@ void Watchy::handleButtonPress() {
                             setTime();
                             break;
                         case 1:
-                            setTime();
+                            setHourglass();
                             break;
                         default:
                             break;
@@ -306,9 +306,10 @@ void Watchy::setTime() {
 
     display.setFullWindow();
 
+    long initTime = millis();
     while(1) {
-
-        if(digitalRead(MENU_BTN_PIN) == 1) {
+        // Prevent bounce of the keypress that entered this state.
+        if (millis() - initTime > 1000 && digitalRead(MENU_BTN_PIN) == 1) {
             setIndex++;
             if(setIndex > SET_DAY) {
                 break;
@@ -436,8 +437,61 @@ void Watchy::setTime() {
 
     RTC.set(tm);
 
-    showMenu(menuIndex, false);
+    showWatchFace(false);
+}
 
+void Watchy::setHourglass() {
+    guiState = APP_STATE;
+    bool blink = false;
+
+    pinMode(DOWN_BTN_PIN, INPUT);
+    pinMode(UP_BTN_PIN, INPUT);
+    pinMode(MENU_BTN_PIN, INPUT);
+    pinMode(BACK_BTN_PIN, INPUT);
+
+    display.setFullWindow();
+
+    int currentHourglassMinutes = hourglassMinutes;
+    long initTime = millis();
+    while(1) {
+        // Prevent bounce of the keypress that entered this state.
+        if (millis() - initTime > 1000 && digitalRead(MENU_BTN_PIN) == 1) {
+            hourglassMinutes = currentHourglassMinutes;
+            break;
+        }
+
+        if (digitalRead(BACK_BTN_PIN) == 1) {
+            break;
+        }
+        blink = !blink;
+        if (digitalRead(DOWN_BTN_PIN) == 1) {
+            currentHourglassMinutes -= 1;
+        }
+        if (digitalRead(UP_BTN_PIN) == 1) {
+            currentHourglassMinutes++;
+        }
+        if (currentHourglassMinutes > 59) {
+            currentHourglassMinutes = 59;
+        } else if (currentHourglassMinutes < 1) {
+            currentHourglassMinutes = 1;
+        }
+
+        display.fillScreen(GxEPD_WHITE);
+        display.setTextColor(blink ? GxEPD_WHITE : GxEPD_BLACK);
+        display.setFont(&DSEG7_Classic_Bold_53);
+        display.setCursor(35, 130);
+
+        if (currentHourglassMinutes < 10) {
+            display.print("0");
+        }
+        display.print(currentHourglassMinutes);
+
+        display.setFont(&FreeMonoBold9pt7b);
+        display.setTextColor(GxEPD_BLACK);
+        display.print(" min");
+        display.display(true); //partial refresh
+    }
+    showWatchFace(false);
 }
 
 void Watchy::showWatchFace(bool partialRefresh) {
@@ -479,7 +533,7 @@ void Watchy::drawTime() {
     display.setTextColor(GxEPD_BLACK);
 
     display.setFont(&DSEG7_Classic_Bold_53);
-    display.setCursor(5, 120);
+    display.setCursor(5, 130);
     if(currentTime.Hour < 10) {
         display.print("0");
     }

@@ -35,6 +35,7 @@ class Watchy {
         virtual void drawWatchFace(); //override this method for different watch faces
 
         void setTime();
+        void setHourglass();
 
     private:
         void setNextAlarm(int currentMinute, int minutesRemaining);
