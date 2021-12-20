@@ -232,7 +232,7 @@ void Watchy::showHourglass(bool partialRefresh) {
     guiState = HOURGLASS_STATE;
     int currentMinute = RTC.getMinute();
     if (currentMinute == targetMinute) {
-        vibMotor(20, 2);
+        vibMotor(100, 4);
         showWatchFace(false);
         return;
     }
