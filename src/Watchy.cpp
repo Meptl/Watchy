@@ -99,6 +99,12 @@ void Watchy::handleButtonPress() {
     //Up Button
     else if (wakeupBit & UP_BTN_MASK) {
         switch (guiState) {
+            case WATCHFACE_STATE:
+                showWatchFace(false);
+                break;
+            case HOURGLASS_STATE:
+                showHourglass(false);
+                break;
             case MAIN_MENU_STATE:
                 menuIndex--;
                 if(menuIndex < 0) {
