@@ -15,7 +15,7 @@ String getValue(String data, char separator, int index)
 {
   int found = 0;
   int strIndex[] = {0, -1};
-  int maxIndex = data.length()-1;
+  int maxIndex = data.length()-1
 
   for(int i=0; i<=maxIndex && found<=index; i++){
     if(data.charAt(i)==separator || i==maxIndex){
