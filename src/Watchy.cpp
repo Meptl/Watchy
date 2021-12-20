@@ -8,7 +8,6 @@ RTC_DATA_ATTR int targetMinute;
 RTC_DATA_ATTR int guiState;
 RTC_DATA_ATTR int menuIndex;
 RTC_DATA_ATTR bool displayFullInit = true;
-RTC_DATA_ATTR bool alarmSet;
 
 Watchy::Watchy() {} //constructor
 
@@ -18,7 +17,6 @@ void Watchy::init(String datetime) {
     Wire.begin(SDA, SCL); //init i2c
     RTC.init();
 
-    alarmSet = false;
 
     // Init the display here for all cases, if unused, it will do nothing
     display.init(0, displayFullInit, 10, true); // 10ms by spec, and fast pulldown reset
@@ -55,9 +53,8 @@ void Watchy::displayBusyCallback(const void*){
 void Watchy::deepSleep() {
     display.hibernate();
     displayFullInit = false; // Notify not to init it again
-    if (!alarmSet) {
-        RTC.clearAlarm(); //resets the alarm flag in the RTC
-    }
+    // We handle this on a watchface by watchface basis
+    // RTC.clearAlarm();
     // Set pins 0-39 to input to avoid power leaking out
     for(int i=0; i<40; i++) {
         pinMode(i, INPUT);
@@ -264,7 +261,6 @@ void Watchy::setNextAlarm(int currentMinute, int minutesRemaining) {
         }
     }
 
-    alarmSet = true;
     if (nextMinute < currentMinute) {
         RTC.clearAlarm(nextMinute + 60 - currentMinute);
         drawHourglass(minutesRemaining, nextMinute + 60 - currentMinute);
@@ -500,6 +496,12 @@ void Watchy::showWatchFace(bool partialRefresh) {
     display.fillScreen(GxEPD_WHITE);
     drawWatchFace();
     display.display(partialRefresh); //partial refresh
+
+    if (currentTime.Minute % 5 == 0) {
+        RTC.clearAlarm(5);
+    } else {
+        RTC.clearAlarm(5 - (currentTime.Minute % 5));
+    }
     guiState = WATCHFACE_STATE;
 }
 
