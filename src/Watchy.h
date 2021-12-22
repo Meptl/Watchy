@@ -13,7 +13,6 @@
 
 class Watchy {
     public:
-        const int HOURGLASS_SEGMENTS = 8;
         static WatchyRTC RTC;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
         tmElements_t currentTime;
@@ -31,14 +30,14 @@ class Watchy {
         void showHourglass(bool partialRefresh);
         void drawTime();
         void drawBattery(uint8_t x, uint8_t y);
-        void drawHourglass(int minutesRemainning, int i);
+        void drawHourglass(int minutesRemainning);
         virtual void drawWatchFace(); //override this method for different watch faces
 
         void setTime();
         void setHourglass();
 
     private:
-        void setNextAlarm(int currentMinute, int minutesRemaining);
+        void setNextAlarm(int minutesRemaining);
 };
 
 extern RTC_DATA_ATTR int guiState;

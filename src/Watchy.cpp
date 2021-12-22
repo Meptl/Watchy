@@ -244,36 +244,19 @@ void Watchy::showHourglass(bool partialRefresh) {
         minutesRemaining = 60 - currentMinute + targetMinute;
     }
 
-    setNextAlarm(currentMinute, minutesRemaining);
+    drawHourglass(minutesRemaining);
+    setNextAlarm(minutesRemaining);
 }
 
-void Watchy::setNextAlarm(int currentMinute, int minutesRemaining) {
-    float percentageComplete = (float)(hourglassMinutes - minutesRemaining) / hourglassMinutes;
-    int fills = (int)(percentageComplete / (1.0 / HOURGLASS_SEGMENTS));
-
-    float nextFillPercentage = (fills + 1) * (1.0 / HOURGLASS_SEGMENTS);
-    int nextMinute = 0;
-    if (nextFillPercentage >= 0.99) {
-        nextMinute = targetMinute;
-    } else {
-        int startMinute = targetMinute - hourglassMinutes;
-        if (startMinute < 0) {
-            startMinute += 60;
-        }
-
-        nextMinute = startMinute + (int)(nextFillPercentage * hourglassMinutes + 1);
-        if (nextMinute > 59) {
-            nextMinute -= 60;
-        }
+void Watchy::setNextAlarm(int minutesRemaining) {
+    int amountToWait = hourglassMinutes / 8;
+    if (amountToWait < 1) {
+        amountToWait = 1;
     }
-
-    if (nextMinute < currentMinute) {
-        RTC.clearAlarm(nextMinute + 60 - currentMinute);
-        drawHourglass(minutesRemaining, nextMinute + 60 - currentMinute);
-    } else {
-        RTC.clearAlarm(nextMinute - currentMinute);
-        drawHourglass(minutesRemaining, nextMinute - currentMinute);
+    if (minutesRemaining < amountToWait) {
+        amountToWait = minutesRemaining;
     }
+    RTC.clearAlarm(amountToWait);
 }
 
 void Watchy::vibMotor(uint8_t intervalMs, uint8_t length) {
@@ -516,24 +499,16 @@ void Watchy::drawWatchFace() {
     drawBattery(154, 5);
 }
 
-void Watchy::drawHourglass(int minutesRemaining, int i) {
-    display.init(0, false); //_initial_refresh to false to prevent full update on init
+void Watchy::drawHourglass(int minutesRemaining) {
     display.setFullWindow();
-    display.fillScreen(GxEPD_WHITE);
 
-    display.setTextColor(GxEPD_BLACK);
-    display.setFont(&DSEG7_Classic_Bold_53);
-    display.setCursor(4, 4);
-    display.println(i);
+    float percentageRemaining = (float)minutesRemaining / hourglassMinutes;
+    float percentageComplete = 1.0 - percentageRemaining;
 
-    float percentageComplete = (float)(hourglassMinutes - minutesRemaining) / hourglassMinutes;
-    int fillHeight = (int)((float)DISPLAY_HEIGHT / HOURGLASS_SEGMENTS);
-    int fills = (int)(percentageComplete / (1.0 / HOURGLASS_SEGMENTS));
+    int fillHeight = DISPLAY_HEIGHT * percentageComplete;
 
     display.fillScreen(GxEPD_WHITE);
-    for (int i = 0; i < fills; i++) {
-        display.fillRect(0, DISPLAY_HEIGHT - fillHeight * i, DISPLAY_WIDTH, fillHeight, GxEPD_BLACK);
-    }
+    display.fillRect(0, DISPLAY_HEIGHT - fillHeight, DISPLAY_WIDTH, fillHeight, GxEPD_BLACK);
     display.display(false);
 }
 
@@ -559,7 +534,7 @@ void Watchy::drawBattery(uint8_t x, uint8_t y) {
     const uint8_t BATTERY_SEGMENT_SPACING = 9;
 
     display.drawBitmap(x, y, battery, 37, 21, GxEPD_BLACK);
-    display.fillRect(x + 5, y + 5, 27, BATTERY_SEGMENT_HEIGHT, GxEPD_WHITE); //clear battery HOURGLASS_SEGMENTS
+    display.fillRect(x + 5, y + 5, 27, BATTERY_SEGMENT_HEIGHT, GxEPD_WHITE); //clear battery
     int8_t batteryLevel = 0;
     float VBAT = getBatteryVoltage();
     if(VBAT > 4.0) {
