@@ -245,7 +245,7 @@ void Watchy::showHourglass(bool partialRefresh) {
         minutesRemaining = 60 - currentMinute + targetMinute;
     }
 
-    drawHourglass(minutesRemaining);
+    drawHourglass(minutesRemaining, partialRefresh);
     setNextAlarm(minutesRemaining);
 }
 
@@ -500,7 +500,7 @@ void Watchy::drawWatchFace() {
     drawBattery(154, 5);
 }
 
-void Watchy::drawHourglass(int minutesRemaining) {
+void Watchy::drawHourglass(int minutesRemaining, bool partialRefresh) {
     display.setFullWindow();
 
     float percentageRemaining = (float)minutesRemaining / hourglassMinutes;
@@ -510,7 +510,7 @@ void Watchy::drawHourglass(int minutesRemaining) {
 
     display.fillScreen(GxEPD_WHITE);
     display.fillRect(0, DISPLAY_HEIGHT - fillHeight, DISPLAY_WIDTH, fillHeight, GxEPD_BLACK);
-    display.display(false);
+    display.display(partialRefresh);
 }
 
 void Watchy::drawTime() {

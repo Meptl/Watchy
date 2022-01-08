@@ -30,7 +30,7 @@ class Watchy {
         void showHourglass(bool partialRefresh);
         void drawTime();
         void drawBattery(uint8_t x, uint8_t y);
-        void drawHourglass(int minutesRemainning);
+        void drawHourglass(int minutesRemaining, bool partialRefresh);
         virtual void drawWatchFace(); //override this method for different watch faces
 
         void setTime();
