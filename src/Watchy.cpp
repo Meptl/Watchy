@@ -89,6 +89,7 @@ void Watchy::handleButtonPress() {
     else if (wakeupBit & BACK_BTN_MASK) {
         switch (guiState) {
             case MAIN_MENU_STATE: //exit to watch face if already in menu
+            case HOURGLASS_STATE:
                 showWatchFace(false);
                 break;
             case APP_STATE:
