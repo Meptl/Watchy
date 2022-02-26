@@ -304,12 +304,14 @@ void Watchy::setTime() {
         if(digitalRead(BACK_BTN_PIN) == 1) {
             if(setIndex != SET_HOUR) {
                 setIndex--;
+            } else {
+                break;
             }
         }
 
         blink = 1 - blink;
 
-        if(digitalRead(DOWN_BTN_PIN) == 1) {
+        if(digitalRead(UP_BTN_PIN) == 1) {
             blink = 1;
             switch(setIndex) {
                 case SET_HOUR:
@@ -332,7 +334,7 @@ void Watchy::setTime() {
             }
         }
 
-        if(digitalRead(UP_BTN_PIN) == 1) {
+        if(digitalRead(DOWN_BTN_PIN) == 1) {
             blink = 1;
             switch(setIndex) {
                 case SET_HOUR:
