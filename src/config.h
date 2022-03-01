@@ -45,9 +45,6 @@
 //set time
 #define SET_HOUR 0
 #define SET_MINUTE 1
-#define SET_YEAR 2
-#define SET_MONTH 3
-#define SET_DAY 4
 #define YEAR_OFFSET 2000
 #define HOUR_12_24 24
 //BLE OTA

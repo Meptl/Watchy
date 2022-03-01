@@ -277,10 +277,6 @@ void Watchy::setTime() {
 
     int8_t minute = currentTime.Minute;
     int8_t hour = currentTime.Hour;
-    int8_t day = currentTime.Day;
-    int8_t month = currentTime.Month;
-    int8_t year = currentTime.Year;
-
     int8_t setIndex = SET_HOUR;
 
     int8_t blink = 0;
@@ -297,7 +293,7 @@ void Watchy::setTime() {
         // Prevent bounce of the keypress that entered this state.
         if (millis() - initTime > 1000 && digitalRead(MENU_BTN_PIN) == 1) {
             setIndex++;
-            if(setIndex > SET_DAY) {
+            if(setIndex > SET_MINUTE) {
                 break;
             }
         }
@@ -320,15 +316,6 @@ void Watchy::setTime() {
                 case SET_MINUTE:
                     minute == 59 ? (minute = 0) : minute++;
                     break;
-                case SET_YEAR:
-                    year == 99 ? (year = 0) : year++;
-                    break;
-                case SET_MONTH:
-                    month == 12 ? (month = 1) : month++;
-                    break;
-                case SET_DAY:
-                    day == 31 ? (day = 1) : day++;
-                    break;
                 default:
                     break;
             }
@@ -342,15 +329,6 @@ void Watchy::setTime() {
                     break;
                 case SET_MINUTE:
                     minute == 0 ? (minute = 59) : minute--;
-                    break;
-                case SET_YEAR:
-                    year == 0 ? (year = 99) : year--;
-                    break;
-                case SET_MONTH:
-                    month == 1 ? (month = 12) : month--;
-                    break;
-                case SET_DAY:
-                    day == 1 ? (day = 31) : day--;
                     break;
                 default:
                     break;
@@ -381,44 +359,10 @@ void Watchy::setTime() {
             display.print("0");
         }
         display.print(minute);
-
-        display.setTextColor(GxEPD_WHITE);
-
-        display.setFont(&FreeMonoBold9pt7b);
-        display.setCursor(45, 150);
-        if(setIndex == SET_YEAR) {//blink minute digits
-            display.setTextColor(blink ? GxEPD_WHITE : GxEPD_BLACK);
-        }
-        display.print(2000+year);
-
-        display.setTextColor(GxEPD_WHITE);
-        display.print("/");
-
-        if(setIndex == SET_MONTH) {//blink minute digits
-            display.setTextColor(blink ? GxEPD_WHITE : GxEPD_BLACK);
-        }
-        if(month < 10) {
-            display.print("0");
-        }
-        display.print(month);
-
-        display.setTextColor(GxEPD_WHITE);
-        display.print("/");
-
-        if(setIndex == SET_DAY) {//blink minute digits
-            display.setTextColor(blink ? GxEPD_WHITE : GxEPD_BLACK);
-        }
-        if(day < 10) {
-            display.print("0");
-        }
-        display.print(day);
         display.display(true); //partial refresh
     }
 
     tmElements_t tm;
-    tm.Month = month;
-    tm.Day = day;
-    tm.Year = year;
     tm.Hour = hour;
     tm.Minute = minute;
     tm.Second = 0;
